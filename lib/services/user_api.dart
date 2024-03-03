@@ -1,6 +1,7 @@
 import 'dart:developer';
 import "package:http/http.dart" as http;
 import "package:rest_flutter/model/user.dart";
+import "package:rest_flutter/model/user_address.dart";
 import "package:rest_flutter/model/user_dob.dart";
 import "dart:convert";
 import "package:rest_flutter/model/user_name.dart";
@@ -24,6 +25,13 @@ class UserApi {
         dateTime: DateTime.parse(e['dob']['date']),
         age: e['dob']['age'],
       );
+      final loc = UserLocation(
+          street: e['location']['street']['name'],
+          city: e['location']['city'],
+          state: e['location']['state'],
+          country: e['location']['country'],
+          pin: e['location']['postcode'].toString());
+          
       return User(
         gender: e['gender'],
         // name: e["title"] + ". " + e["first"] + " " + e["last"],
@@ -32,6 +40,7 @@ class UserApi {
         nat: e['nat'],
         name: name,
         userDob: dob,
+        location: loc,
       );
     }).toList();
     return transformed;

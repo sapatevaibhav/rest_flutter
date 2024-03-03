@@ -34,12 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
-          final email = user.email;
+          // final email = user.email;
           final color = user.gender == "male"
               ? const Color.fromARGB(172, 251, 188, 0)
               : const Color.fromARGB(135, 244, 183, 1);
           final name = user.fullName;
           final dob = user.userDob.age;
+          final address =
+              "${user.location.street}, ${user.location.city}, ${user.location.state}, ${user.location.country}, ${user.location.pin}";
           // final fullName =user.name;
           // name["title"] + ". " + name["first"] + " " + name["last"];
           // final imageUrl = user["picture"]["thumbnail"];
@@ -65,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             subtitle: Text(
-              email,
+              address,
             ),
           );
         },
