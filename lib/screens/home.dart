@@ -1,8 +1,6 @@
-import "dart:convert";
-import "dart:developer";
-import "package:http/http.dart" as http;
 import "package:flutter/material.dart";
 import "package:rest_flutter/model/user.dart";
+import "package:rest_flutter/services/user_api.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +11,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<User> users = [];
+  @override
+  void initState() {
+    super.initState();
+    fetchUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
           final color = user.gender == "male"
               ? const Color.fromARGB(172, 251, 188, 0)
               : const Color.fromARGB(135, 244, 183, 1);
-          final name = user.name;
+          final name = user.fullName;
           // final fullName =user.name;
           // name["title"] + ". " + name["first"] + " " + name["last"];
           // final imageUrl = user["picture"]["thumbnail"];
@@ -54,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             title: Text(
-              name.first,
+              name,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -65,45 +69,22 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: fetchUsers,
-        child: const Text(
-          "+",
-          style: TextStyle(
-            fontSize: 30,
-          ),
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: fetchUsers,
+      //   child: const Text(
+      //     "+",
+      //     style: TextStyle(
+      //       fontSize: 30,
+      //     ),
+      //   ),
+      // ),
     );
   }
 
-  void fetchUsers() async {
-    log("Fetching Users...");
-    const url = 'https://randomuser.me/api/?results=15';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    final body = response.body;
-    final json = jsonDecode(body);
-    final results = json['results'] as List<dynamic>;
-    final transformed = results.map((e) {
-      final name = UserName(
-        title: e['name']['title'],
-        first: e['name']['first'],
-        last: e['name']['last'],
-      );
-      return User(
-        gender: e['gender'],
-        // name: e["title"] + ". " + e["first"] + " " + e["last"],
-        email: e['email'],
-        phone: e['phone'],
-        nat: e['nat'],
-        name: name,
-      );
-    }).toList();
-
+  Future<void> fetchUsers() async {
+    final response = await UserApi.fetchUsers();
     setState(() {
-      users = transformed;
+      users = response;
     });
-    log("Got users");
   }
 }

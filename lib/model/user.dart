@@ -1,3 +1,5 @@
+import 'package:rest_flutter/model/user_name.dart';
+
 class User {
   final String gender, email, phone, nat;
   final UserName name;
@@ -8,14 +10,7 @@ class User {
     required this.phone,
     required this.nat,
   });
-}
-
-class UserName {
-  final String title, first, last;
-
-  UserName({
-    required this.title,
-    required this.first,
-    required this.last,
-  });
+  String get fullName {
+    return '${name.title}. ${name.first} ${name.last}';
+  }
 }
